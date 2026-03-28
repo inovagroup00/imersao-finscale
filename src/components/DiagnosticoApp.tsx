@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import {
   SL, DL, OL, ML, SLBL, INT_LBL, OPS, CASES, DIAG, JOGO,
   fmt, calcPot, calcInteresse
@@ -56,7 +56,7 @@ export default function DiagnosticoApp() {
 
     // Save to Supabase
     try {
-      await supabase.from('imersao_leads').insert({
+      await getSupabase().from('imersao_leads').insert({
         nome, cargo, empresa, email,
         setor: SL[setor] || setor,
         faturamento: fatLbl,
