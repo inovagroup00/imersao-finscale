@@ -1,0 +1,558 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<title>Finscale · Diagnóstico</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:#000!important;color-scheme:dark!important}
+body{background:#000!important;color:#B0B0B0;font-family:'Archivo',sans-serif;font-size:17px;line-height:1.65;min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased}
+:root{--bg:#000;--s1:#0D0D0D;--s2:#161616;--b1:#1E1E1E;--b2:#2A2A2A;--b3:#383838;--t1:#FFF;--t2:#B0B0B0;--t3:#808080;--t4:#2A2A2A}
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:#000!important;border-bottom:1px solid var(--b1);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo-img{height:28px;width:auto;display:block;flex-shrink:0}
+.hdr-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pdots{display:flex;gap:3px}
+.pd{width:12px;height:2px;border-radius:1px;background:var(--b3);transition:background .3s}
+.pd.on{background:#fff}.pd.done{background:var(--b2)}
+.ptxt{font-size:10px;color:var(--t3);letter-spacing:.16em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+/* SCREENS */
+.scr{display:none;background:#000!important;min-height:calc(100vh - 49px);min-height:calc(100dvh - 49px);padding:36px 20px 68px;max-width:480px;margin:0 auto;width:100%;flex-direction:column;justify-content:center;animation:up .35s ease}
+.scr.on{display:flex}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* TYPE */
+.tag{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--t2);margin-bottom:14px}
+h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(32px,9vw,52px);line-height:.97;color:#fff!important;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:18px}
+.ol{-webkit-text-stroke:1.5px #fff;color:transparent!important}
+.rule{width:24px;height:1px;background:var(--b3);margin-bottom:18px}
+.sub{font-size:16px;color:var(--t2);line-height:1.75;max-width:400px;margin-bottom:36px}
+.sn{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--t2);margin-bottom:12px}
+h2{font-family:'Archivo',sans-serif;font-weight:800;font-size:clamp(20px,5.5vw,30px);line-height:1.1;color:#fff!important;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:6px}
+.hint{font-size:15px;color:var(--t2);margin-bottom:22px;line-height:1.65}
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:5px;margin-bottom:22px}
+.opt{background:transparent!important;border:1px solid var(--b1);border-radius:4px;padding:13px 14px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:flex-start;gap:11px;text-align:left;width:100%}
+.opt:active{background:var(--s2)!important}.opt.on{border-color:#fff;background:var(--s2)!important}
+.ok{width:22px;height:22px;flex-shrink:0;border:1px solid var(--b3);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--t3);transition:all .15s;margin-top:1px;background:transparent!important}
+.opt.on .ok{background:#fff!important;color:#000!important;border-color:#fff}
+.ol2{font-size:15px;color:var(--t1);font-weight:500;line-height:1.4}.opt.on .ol2{color:#fff!important}
+.od{font-size:13px;color:var(--t2);margin-top:3px}
+/* INPUTS */
+.fld{border-bottom:1px solid var(--b2);margin-bottom:14px;transition:border-color .2s;background:transparent!important}
+.fld:focus-within{border-color:var(--t3)}
+.fld input{background:transparent!important;background-color:transparent!important;border:none!important;outline:none!important;width:100%;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:'Archivo',sans-serif;font-size:17px;font-weight:400;padding:13px 0;letter-spacing:.01em;-webkit-box-shadow:0 0 0px 1000px #000 inset!important;box-shadow:0 0 0px 1000px #000 inset!important;caret-color:#fff}
+.fld input::placeholder{color:var(--b3)!important;-webkit-text-fill-color:var(--b3)!important}
+.fld input:-webkit-autofill,.fld input:-webkit-autofill:hover,.fld input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0px 1000px #000 inset!important;-webkit-text-fill-color:#fff!important}
+.fhint{font-size:13px;color:var(--t2);margin-bottom:26px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff!important;color:#000!important;-webkit-text-fill-color:#000!important;font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:16px 32px;border:none;border-radius:3px;cursor:pointer;transition:opacity .2s;-webkit-appearance:none}
+.btn:active{opacity:.8}.btn:disabled{background:var(--b2)!important;color:var(--t3)!important;-webkit-text-fill-color:var(--t3)!important;cursor:not-allowed}
+.btn.full{width:100%}
+.btn-g{background:transparent!important;border:1px solid var(--b3);color:var(--t3)!important;-webkit-text-fill-color:var(--t3)!important;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:12px 20px;border-radius:3px;cursor:pointer;transition:all .2s;-webkit-appearance:none}
+/* STARS */
+.stars-row{display:flex;gap:10px;margin-bottom:10px}
+.star{font-size:38px;cursor:pointer;opacity:.25;transition:opacity .2s;color:#fff;-webkit-text-fill-color:#fff}
+.star.on{opacity:1}
+.star-lbl{font-size:15px;color:var(--t2);min-height:20px;margin-bottom:28px}
+/* RESULT */
+.rhead{padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--b1)}
+.rtag{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+.rid{font-size:13px;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;font-weight:500}
+.rnum{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(52px,14vw,84px);color:#fff!important;line-height:.95;letter-spacing:-.04em}
+.runit{font-size:12px;color:var(--t2);letter-spacing:.2em;text-transform:uppercase;margin-top:10px;margin-bottom:14px;font-weight:600}
+.rcopy{font-size:16px;color:var(--t1);line-height:1.75}
+.sttl{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--t2);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--b1)}
+.ld{display:flex;align-items:center;gap:10px;padding:16px 0;font-size:13px;color:var(--t3)}
+.ldd{display:flex;gap:4px}
+.ldd span{width:4px;height:4px;border-radius:50%;background:var(--t3);animation:bl 1.2s infinite}
+.ldd span:nth-child(2){animation-delay:.2s}.ldd span:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,80%,100%{opacity:.15;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+/* ANALYSIS */
+.abox{border:1px solid var(--b1);border-radius:3px;padding:20px;background:var(--s1)!important;margin-bottom:24px}
+.ablk{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--b1)}
+.ablk:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.ablk-ttl{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.ablk-txt{font-size:15px;color:var(--t1);line-height:1.8;white-space:pre-wrap}
+.ablk.alert .ablk-txt{color:var(--t3)}
+/* OPS */
+.olist{margin-bottom:24px}
+.orow{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--b1)}
+.orow:last-child{border-bottom:none}
+.on_{font-family:'Archivo',sans-serif;font-weight:900;font-size:11px;letter-spacing:.1em;flex-shrink:0;min-width:24px;padding-top:2px}
+.on_.p1{color:#fff!important}.on_.p2{color:var(--t2)}.on_.p3{color:var(--t3)}
+.oname{font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:4px}
+.p1 .oname{color:#fff!important}.p2 .oname{color:var(--t1)}.p3 .oname{color:var(--t2)}
+.owhy{font-size:14px;color:var(--t2);line-height:1.6}
+.opil{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--b2);border-radius:1px;color:var(--t3);margin-top:6px}
+/* CASES */
+.clist{margin-bottom:24px}
+.crow{padding:14px 0;border-bottom:1px solid var(--b1)}
+.crow:last-child{border-bottom:none}
+.crow-co{font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#fff!important;margin-bottom:4px}
+.crow-res{font-size:14px;color:var(--t1);line-height:1.65;margin-bottom:4px}
+.crow-src{font-size:13px;color:var(--t2);font-style:italic}
+.crow-src a{color:var(--t3);text-decoration:underline;text-decoration-color:var(--b3)}
+/* INT BADGE */
+.int-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:100px;margin-bottom:14px}
+.int-1{background:rgba(255,255,255,.05);color:var(--t3)}
+.int-2{background:rgba(255,200,0,.08);color:#C8A000}
+.int-3{background:rgba(0,200,100,.08);color:#00C864}
+.int-dot{width:6px;height:6px;border-radius:50%}
+.int-1 .int-dot{background:var(--t3)}.int-2 .int-dot{background:#C8A000}.int-3 .int-dot{background:#00C864}
+/* CTA */
+.ctab{border:1px solid var(--b2);border-radius:3px;padding:22px 18px;background:var(--s1)!important;margin-bottom:20px}
+.ctat{font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;color:#fff!important;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:8px}
+.ctac{font-size:15px;color:var(--t2);line-height:1.7;margin-bottom:18px}
+/* FOOTER */
+footer{background:#000!important;padding:20px;text-align:center;font-size:10px;color:var(--t4);letter-spacing:.08em;text-transform:uppercase;border-top:1px solid var(--b1)}
+/* ADMIN MODAL */
+#pw-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97)!important;z-index:400;align-items:center;justify-content:center;padding:20px}
+#pw-modal.on{display:flex}
+.pwbox{background:var(--s1)!important;border:1px solid var(--b2);border-radius:4px;padding:28px 22px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px}
+.pwt{font-family:'Archivo',sans-serif;font-weight:800;font-size:13px;color:#fff!important;text-transform:uppercase;letter-spacing:.1em}
+.pwi{background:transparent!important;border:none!important;border-bottom:1px solid var(--b3)!important;outline:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:'Archivo',sans-serif;font-size:18px;font-weight:700;padding:10px 0;letter-spacing:.12em;width:100%;-webkit-box-shadow:0 0 0px 1000px var(--s1) inset!important;caret-color:#fff}
+.pwi::placeholder{color:var(--t4)!important;-webkit-text-fill-color:var(--t4)!important;font-weight:400;font-size:13px;letter-spacing:.02em}
+.pwe{font-size:12px;color:var(--t3);display:none}
+/* ADMIN PANEL */
+#adm{display:none;position:fixed;inset:0;background:#000!important;z-index:300;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px}
+#adm.on{display:block}
+.admi{background:var(--s1)!important;border:1px solid var(--b1);border-radius:3px;padding:18px;max-width:1100px;margin:0 auto}
+.admhd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--b1);flex-wrap:wrap}
+.admhd h3{font-family:'Archivo',sans-serif;font-weight:900;font-size:14px;color:#fff!important;text-transform:uppercase;letter-spacing:.04em}
+.adm-btns{display:flex;gap:8px;flex-wrap:wrap}
+.admc{background:transparent!important;border:1px solid var(--b2);color:var(--t3)!important;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:7px 12px;border-radius:2px;cursor:pointer;-webkit-appearance:none}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+@media(min-width:500px){.stats{grid-template-columns:repeat(4,1fr)}}
+.sbox{background:var(--s2)!important;border:1px solid var(--b1);border-radius:2px;padding:12px 14px}
+.sbox .sv{font-family:'Archivo',sans-serif;font-weight:900;font-size:20px;color:#fff!important;letter-spacing:-.02em}
+.sbox .sl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.12em;margin-top:3px;font-weight:600}
+/* LEAD CARDS */
+.leads-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.lead-card{background:var(--s2)!important;border:1px solid var(--b1);border-radius:3px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+.lead-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;color:#fff!important}
+.lead-co{font-size:11px;color:var(--t3);margin-top:1px}
+.lead-email{font-size:11px;color:var(--t3);margin-top:2px}
+.lead-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.ltag{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--b2);border-radius:100px;color:var(--t3)}
+.ltag.hl{border-color:var(--b3);color:var(--t2)}
+.lead-pot{font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;color:#fff!important;text-align:right;white-space:nowrap}
+.lead-nps{font-size:10px;color:var(--t3);text-align:right;margin-top:2px}
+.lead-int{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-top:3px;display:inline-block}
+.li-1{background:rgba(255,255,255,.05);color:var(--t3)}.li-2{background:rgba(255,200,0,.1);color:#C8A000}.li-3{background:rgba(0,200,100,.1);color:#00C864}
+.bcsv{background:#fff!important;color:#000!important;-webkit-text-fill-color:#000!important;font-family:'Archivo',sans-serif;font-weight:800;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:10px 20px;border:none;border-radius:2px;cursor:pointer;-webkit-appearance:none}
+.empty{text-align:center;padding:32px;color:var(--t3);font-size:13px}
+.live-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#00C864;animation:p2 2s infinite}
+@keyframes p2{0%,100%{opacity:.3}50%{opacity:1}}
+/* TABLE — desktop only */
+.tw{overflow-x:auto;margin-bottom:14px;display:none}
+@media(min-width:900px){.tw{display:block}.leads-grid{display:none}}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{background:var(--s2)!important;color:var(--t3);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 10px;text-align:left;border-bottom:1px solid var(--b1);white-space:nowrap;font-weight:700}
+td{padding:8px 10px;border-bottom:1px solid var(--b1);color:var(--t2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAQ4BDgDASIAAhEBAxEB/8QAHQABAAIDAQEBAQAAAAAAAAAAAAgJBQYHBAMBAv/EAE4QAQABAwMBAwUKCQsCBQUAAAABAgMEBQYRBxIhMQg3QVFWCRMUFyJ1dpW00hYyOFJhcZSysxUjMzVCV2JydIHRGJFDR4KFoaKlxNPh/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AIZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/Z" alt="Finscale" class="logo-img">
+  <div class="hdr-r">
+    <div class="pdots">
+      <div class="pd" id="d1"></div><div class="pd" id="d2"></div>
+      <div class="pd" id="d3"></div><div class="pd" id="d4"></div>
+      <div class="pd" id="d5"></div><div class="pd" id="d6"></div>
+      <div class="pd" id="d7"></div>
+    </div>
+    <div class="ptxt" id="pn">—</div>
+  </div>
+</header>
+
+<!-- INTRO -->
+<div class="scr on" id="s0">
+  <div class="tag">Diagnóstico · Embedded Finance</div>
+  <h1>Seu negócio<br>tem dinheiro<br><span class="ol">escondido</span><br>nele.</h1>
+  <div class="rule"></div>
+  <p class="sub">7 perguntas. Resultado imediato com análise personalizada, roadmap e cases reais do seu setor.</p>
+  <button class="btn full" onclick="go('s1')">Iniciar diagnóstico →</button>
+</div>
+
+<!-- S1 -->
+<div class="scr" id="s1">
+  <div class="sn">01 / 07</div>
+  <h2>Quem é você<br>e o que opera?</h2>
+  <p class="hint">Só para personalizar seu resultado.</p>
+  <div class="fld"><input type="text" id="f1" placeholder="Seu nome completo" oninput="ck1()"></div>
+  <div class="fld"><input type="text" id="f2" placeholder="Cargo / função" oninput="ck1()"></div>
+  <div class="fld"><input type="text" id="f3" placeholder="Nome da empresa" oninput="ck1()"></div>
+  <div class="fld"><input type="email" id="f4" placeholder="Seu melhor e-mail" oninput="ck1()"></div>
+  <p class="fhint">Confidencial — não compartilhamos seus dados.</p>
+  <button class="btn full" id="b1" disabled onclick="go('s2')">Próxima →</button>
+</div>
+
+<!-- S2 -->
+<div class="scr" id="s2">
+  <div class="sn">02 / 07</div>
+  <h2>Setor e<br>faturamento</h2>
+  <p class="hint">Setor e porte do negócio.</p>
+  <div class="opts" id="o-setor">
+    <div class="opt" onclick="pick(this,'setor','varejo')"><div class="ok">A</div><div><div class="ol2">Varejo / Moda / Alimentação / Franquias</div></div></div>
+    <div class="opt" onclick="pick(this,'setor','construcao')"><div class="ok">B</div><div><div class="ol2">Construção / Incorporação / Imóveis</div></div></div>
+    <div class="opt" onclick="pick(this,'setor','saude')"><div class="ok">C</div><div><div class="ol2">Saúde / Equipamentos / Farmácia</div></div></div>
+    <div class="opt" onclick="pick(this,'setor','educacao')"><div class="ok">D</div><div><div class="ol2">Educação / Faculdades / Cursos</div></div></div>
+    <div class="opt" onclick="pick(this,'setor','agro')"><div class="ok">E</div><div><div class="ol2">Agronegócio / Distribuição / Indústria</div></div></div>
+    <div class="opt" onclick="pick(this,'setor','servicos')"><div class="ok">F</div><div><div class="ol2">Serviços / Tecnologia / Mobilidade</div></div></div>
+  </div>
+  <div class="opts" id="o-fat">
+    <div class="opt" onclick="pick(this,'fat','15-50',32500000)"><div class="ok">1</div><div><div class="ol2">R$ 15 mi – R$ 50 mi / ano</div></div></div>
+    <div class="opt" onclick="pick(this,'fat','50-150',100000000)"><div class="ok">2</div><div><div class="ol2">R$ 50 mi – R$ 150 mi / ano</div></div></div>
+    <div class="opt" onclick="pick(this,'fat','150-500',325000000)"><div class="ok">3</div><div><div class="ol2">R$ 150 mi – R$ 500 mi / ano</div></div></div>
+  </div>
+  <button class="btn full" id="b2" disabled onclick="go('s3')">Próxima →</button>
+</div>
+
+<!-- S3 -->
+<div class="scr" id="s3">
+  <div class="sn">03 / 07</div>
+  <h2>Como o dinheiro<br>flui hoje?</h2>
+  <p class="hint">Selecione todos que se aplicam.</p>
+  <div class="opts" id="o-fluxo">
+    <div class="opt" onclick="multi(this,'fluxo','cartao')"><div class="ok">A</div><div><div class="ol2">Cartão via adquirente</div><div class="od">Cielo, Stone, Rede…</div></div></div>
+    <div class="opt" onclick="multi(this,'fluxo','boleto')"><div class="ok">B</div><div><div class="ol2">Boleto bancário</div></div></div>
+    <div class="opt" onclick="multi(this,'fluxo','pix')"><div class="ok">C</div><div><div class="ol2">Pix</div></div></div>
+    <div class="opt" onclick="multi(this,'fluxo','crediario')"><div class="ok">D</div><div><div class="ol2">Crediário ou parcelamento próprio</div></div></div>
+    <div class="opt" onclick="multi(this,'fluxo','financeira')"><div class="ok">E</div><div><div class="ol2">Financeira ou banco parceiro</div><div class="od">CDC, consórcio, crédito via terceiros</div></div></div>
+    <div class="opt" onclick="multi(this,'fluxo','b2b')"><div class="ok">F</div><div><div class="ol2">Faturamento a prazo B2B</div></div></div>
+  </div>
+  <button class="btn full" id="b3" disabled onclick="go('s4')">Próxima →</button>
+</div>
+
+<!-- S4 -->
+<div class="scr" id="s4">
+  <div class="sn">04 / 07</div>
+  <h2>Maior dor<br>financeira hoje?</h2>
+  <p class="hint">Escolha a que mais incomoda.</p>
+  <div class="opts" id="o-dor">
+    <div class="opt" onclick="pick(this,'dor','custo')"><div class="ok">A</div><div><div class="ol2">Custo alto com intermediários</div><div class="od">MDR, IOF, spread capturáveis internamente</div></div></div>
+    <div class="opt" onclick="pick(this,'dor','inadimplencia')"><div class="ok">B</div><div><div class="ol2">Inadimplência e risco de crédito</div><div class="od">Parceiros ruins, perda de margem</div></div></div>
+    <div class="opt" onclick="pick(this,'dor','caixa')"><div class="ok">C</div><div><div class="ol2">Capital de giro e caixa</div><div class="od">Dificuldade em antecipar recebíveis</div></div></div>
+    <div class="opt" onclick="pick(this,'dor','retencao')"><div class="ok">D</div><div><div class="ol2">Baixa recorrência e retenção</div><div class="od">Cliente compra uma vez — falta vínculo</div></div></div>
+    <div class="opt" onclick="pick(this,'dor','receita')"><div class="ok">E</div><div><div class="ol2">Falta de novas receitas</div><div class="od">Crescer sem aumentar custo proporcionalmente</div></div></div>
+  </div>
+  <button class="btn full" id="b4" disabled onclick="go('s5')">Próxima →</button>
+</div>
+
+<!-- S5 -->
+<div class="scr" id="s5">
+  <div class="sn">05 / 07</div>
+  <h2>Maturidade<br>digital</h2>
+  <p class="hint">Honesto — define qual caminho faz sentido.</p>
+  <div class="opts" id="o-mat">
+    <div class="opt" onclick="pick(this,'mat','basico')"><div class="ok">A</div><div><div class="ol2">Básico</div><div class="od">Processos manuais, ERP simples ou planilhas</div></div></div>
+    <div class="opt" onclick="pick(this,'mat','medio')"><div class="ok">B</div><div><div class="ol2">Médio</div><div class="od">ERP + CRM, dados de clientes disponíveis</div></div></div>
+    <div class="opt" onclick="pick(this,'mat','avancado')"><div class="ok">C</div><div><div class="ol2">Avançado</div><div class="od">APIs, dados comportamentais, time de tech</div></div></div>
+  </div>
+  <button class="btn full" id="b5" disabled onclick="go('s6')">Próxima →</button>
+</div>
+
+<!-- S6 -->
+<div class="scr" id="s6">
+  <div class="sn">06 / 07</div>
+  <h2>O que construir<br>nos próximos<br>12 meses?</h2>
+  <p class="hint">Define a prioridade das recomendações.</p>
+  <div class="opts" id="o-obj">
+    <div class="opt" onclick="pick(this,'obj','reduzir')"><div class="ok">A</div><div><div class="ol2">Reduzir custo com intermediários</div></div></div>
+    <div class="opt" onclick="pick(this,'obj','credito')"><div class="ok">B</div><div><div class="ol2">Lançar ou escalar crédito para clientes</div></div></div>
+    <div class="opt" onclick="pick(this,'obj','pagamentos')"><div class="ok">C</div><div><div class="ol2">Conta digital e pagamentos próprios</div></div></div>
+    <div class="opt" onclick="pick(this,'obj','plataforma')"><div class="ok">D</div><div><div class="ol2">Virar plataforma — escalar para terceiros</div></div></div>
+    <div class="opt" onclick="pick(this,'obj','explorar')"><div class="ok">E</div><div><div class="ol2">Ainda explorando as opções</div></div></div>
+  </div>
+  <button class="btn full" id="b6" disabled onclick="go('s7')">Próxima →</button>
+</div>
+
+<!-- S7 NPS -->
+<div class="scr" id="s7">
+  <div class="sn">07 / 07</div>
+  <h2>Última pergunta</h2>
+  <p class="hint" style="margin-bottom:24px">Pelo que viu até agora, o quanto você recomendaria um evento da Finscale?</p>
+  <div class="stars-row" id="stars-row">
+    <span class="star" onclick="setStar(1)">★</span>
+    <span class="star" onclick="setStar(2)">★</span>
+    <span class="star" onclick="setStar(3)">★</span>
+    <span class="star" onclick="setStar(4)">★</span>
+    <span class="star" onclick="setStar(5)">★</span>
+  </div>
+  <div class="star-lbl" id="star-lbl"></div>
+  <button class="btn full" id="b7" disabled onclick="gerar()">Ver meu diagnóstico →</button>
+</div>
+
+<!-- RESULTADO -->
+<div class="scr" id="sres">
+
+  <!-- CABEÇALHO: só nome + empresa + setor -->
+  <div style="padding-bottom:24px;margin-bottom:24px;border-bottom:1px solid var(--b1)">
+    <div class="rtag">Diagnóstico Finscale · Embedded Finance</div>
+    <div class="rid" id="rid"></div>
+  </div>
+
+  <!-- DIAGNÓSTICO — análise das respostas, sem números, sem plano -->
+  <div style="margin-bottom:28px">
+    <div class="sttl">Diagnóstico do seu negócio</div>
+    <div id="ald" class="ld"><div class="ldd"><span></span><span></span><span></span></div>Analisando o seu perfil...</div>
+    <div id="abox" style="display:none"></div>
+  </div>
+
+  <!-- OPORTUNIDADES DE RECEITA -->
+  <div class="olist">
+    <div class="sttl">Oportunidades de receita identificadas</div>
+    <div id="rops"></div>
+  </div>
+
+  <!-- CASES DO SETOR -->
+  <div class="clist">
+    <div class="sttl">Empresas do seu setor que já fizeram — e o resultado</div>
+    <div id="rcases"></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="ctab">
+    <div class="ctat">Quer entender como isso se aplica ao seu negócio?</div>
+    <div class="ctac">A Finscale trabalha com empresas da economia real para estruturar, lançar e escalar produtos financeiros. Cada caminho é único — e começa com uma conversa.</div>
+    <a href="https://wa.me/5511936203969?text=Ol%C3%A1%21%20Acabei%20de%20fazer%20o%20diagn%C3%B3stico%20de%20embedded%20finance%20da%20Finscale%20e%20quero%20conversar%20sobre%20as%20oportunidades%20para%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener" style="text-decoration:none;display:block"><button class="btn full">Conversar em particular com a Finscale sobre o meu negócio →</button></a>
+  </div>
+
+  <button class="btn-g" onclick="reiniciar()" style="width:100%;margin-top:8px">↩ Refazer</button>
+</div>
+
+<footer>Finscale © 2026 <span id="az" onclick="trigAdm()" style="cursor:default;user-select:none;color:#000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></footer>
+
+<!-- SENHA -->
+<div id="pw-modal">
+  <div class="pwbox">
+    <div class="pwt">Acesso restrito</div>
+    <input class="pwi" type="password" id="pwi" placeholder="Senha" onkeydown="if(event.key==='Enter')ckPw()">
+    <div class="pwe" id="pwe">Senha incorreta.</div>
+    <button class="btn full" onclick="ckPw()">Entrar →</button>
+    <button class="btn-g" style="width:100%" onclick="document.getElementById('pw-modal').classList.remove('on')">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adm">
+  <div class="admi">
+    <div class="admhd">
+      <div><div class="live-badge"><div class="live-dot"></div>Ao vivo</div><h3>Backoffice · Leads</h3></div>
+      <div class="adm-btns">
+        <button class="admc" onclick="loadAdm()">↻ Atualizar</button>
+        <button class="bcsv" onclick="expCSV()">↓ CSV</button>
+        <button class="admc" onclick="closeAdm()">✕</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="sbox"><div class="sv" id="at">0</div><div class="sl">Respostas</div></div>
+      <div class="sbox"><div class="sv" id="ap">—</div><div class="sl">Potencial médio</div></div>
+      <div class="sbox"><div class="sv" id="anps">—</div><div class="sl">NPS médio ★</div></div>
+      <div class="sbox"><div class="sv" id="aint">0</div><div class="sl">Alto interesse</div></div>
+    </div>
+    <div class="leads-grid" id="leads-grid"></div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>#</th><th>Nome</th><th>Cargo</th><th>Empresa</th><th>E-mail</th><th>Setor</th><th>Fat.</th><th>Dor</th><th>Obj.</th><th>Mat.</th><th>NPS</th><th>Interesse</th><th>Potencial</th><th>Horário</th></tr></thead>
+        <tbody id="atb"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="aem">Nenhuma resposta ainda.</div>
+  </div>
+</div>
+
+<script>
+const S={nome:'',cargo:'',empresa:'',email:'',setor:'',fat:0,fat_lbl:'',fluxo:[],dor:'',mat:'',obj:'',stars:0};
+const SL={varejo:'Varejo',construcao:'Construção',saude:'Saúde',educacao:'Educação',agro:'Agro',servicos:'Serviços'};
+const DL={custo:'Custo c/ intermediários',inadimplencia:'Inadimplência',caixa:'Capital de giro',retencao:'Retenção',receita:'Novas receitas'};
+const OL={reduzir:'Reduzir custos',credito:'Lançar crédito',pagamentos:'Conta/pagamentos',plataforma:'Virar plataforma',explorar:'Explorando'};
+const ML={basico:'Básica',medio:'Média',avancado:'Avançada'};
+const SLBL=['','Não recomendaria','Talvez recomendaria','Recomendaria','Recomendaria muito','Com certeza!'];
+
+const OPS={varejo:[{n:'Crédito Embarcado (BNPL)',w:'Cliente já parcela — você não captura o spread. Com crédito próprio, 3-8% de cada venda fica com você.',p:'Alto impacto · Rápido de testar'},{n:'Subcredenciamento / IP Próprio',w:'MDR que vai ao adquirente pode ficar na operação. R$25M+/ano já justifica estruturar.',p:'Receita sobre volume existente'},{n:'Carteira Digital de Fidelidade',w:'Conta digital da sua marca aumenta recorrência e gera dados proprietários.',p:'LTV + dados + receita'}],construcao:[{n:'Gestão de Float Financeiro',w:'Capital de terceiros na operação pode render antes de ser utilizado.',p:'Baixo risco · Alta margem'},{n:'Financiamento de Compradores',w:'Crédito próprio remove dependência bancária e gera receita recorrente.',p:'Alto impacto · Prazo médio'},{n:'Conta Digital Corporativa',w:'Centralizar fluxo de fornecedores reduz custo bancário.',p:'Eficiência + dados'}],saude:[{n:'Antecipação de Recebíveis',w:'Faturamentos a prazo viram caixa imediato. Baixa complexidade regulatória.',p:'Implantação em até 60 dias'},{n:'Crédito B2B Setorial',w:'Crédito direto para hospitais aumenta ticket e captura spread.',p:'Alta fidelização · Alta margem'},{n:'BaaS de Nicho',w:'Com volume, escale a infraestrutura para outras empresas do setor.',p:'Plataforma de longo prazo'}],educacao:[{n:'Crédito Estudantil Próprio',w:'Parceiros ruins causam inadimplência. Com crédito próprio você controla tudo.',p:'Controle total do risco'},{n:'Antecipação de Mensalidades',w:'Recebíveis futuros viram capital de giro hoje sem banco.',p:'Caixa imediato'},{n:'Conta Digital do Aluno',w:'Wallet na instituição aumenta permanência e gera receita recorrente.',p:'LTV + receita'}],agro:[{n:'Crédito de Insumos',w:'Quem financia o insumo fideliza o produtor por safras. Spread de 4-12%/ano.',p:'Alta margem · Alta fidelização'},{n:'Antecipação sobre Contratos',w:'Contratos de safra viram capital de giro. Alta demanda, pouca oferta.',p:'Alta demanda · Pouca oferta'},{n:'Conta Digital do Produtor',w:'Centralizar pagamentos de insumos cria dados exclusivos.',p:'Plataforma vertical'}],servicos:[{n:'Conta de Pagamento Corporativa',w:'Centralizar recebimentos reduz custo bancário e cria float remunerável.',p:'Eficiência operacional'},{n:'Crédito para Clientes B2B',w:'Crédito para clientes aumenta ticket e constrói barreira competitiva.',p:'Crescimento de receita'},{n:'Solução Financeira Vertical',w:'Com conhecimento do nicho, crie o produto que nenhum banco calibra.',p:'Vantagem competitiva única'}]};
+
+const CASES={varejo:[{co:'Mercado Pago (Mercado Livre)',res:'Braço financeiro representa ~50% da receita líquida do grupo. Processou R$580B em pagamentos no Brasil em 2023.',src:'Relatório Anual MercadoLibre 2023',url:'https://investor.mercadolibre.com/annual-reports'},{co:'Midway Financeira (Riachuelo)',res:'15M+ clientes de crédito. Midway responde por ~30% do EBITDA do grupo Guararapes com ROE acima de 20%.',src:'RI Guararapes 2023',url:'https://ri.guararapes.com.br'},{co:'BanQi (Casas Bahia)',res:'5M contas abertas em 18 meses. Receita financeira compensou queda no varejo físico durante reestruturação.',src:'Release Via Varejo 2022',url:'https://ri.casasbahia.com.br'}],construcao:[{co:'Cyrela / Lev',res:'Plataforma de crédito própria reduziu distratos em ~25% com score interno do comprador.',src:'Cyrela RI 2023',url:'https://ri.cyrela.com.br'},{co:'MRV / Luggo',res:'Diversificação para locação com gestão financeira integrada reduziu dependência de FGTS.',src:'MRV RI 2023',url:'https://ri.mrv.com.br'},{co:'Even Construtora',res:'Float de obra via conta de pagamento reduziu custo de capital operacional em ~15%.',src:'Case Fintechlab 2023',url:'https://fintechlab.com.br'}],saude:[{co:'RaiaDrogasil',res:'Fidelidade com crédito: 30M+ usuários ativos. Receita de serviços financeiros cresceu 40% em 2023.',src:'RD Saúde RI 2023',url:'https://ri.raiadrogasil.com.br'},{co:'HapVida / NDI',res:'Verticalização financeira reduziu custo assistencial em ~28% vs operadoras não verticalizadas.',src:'HapVida RI 2022',url:'https://ri.hapvida.com.br'},{co:'Saúde ID (Fleury)',res:'Conta digital para médicos parceiros reduziu inadimplência B2B e aumentou retenção de credenciados.',src:'Fintechlab 2023',url:'https://fintechlab.com.br'}],educacao:[{co:'Pravaler (Cogna)',res:'Financiou R$10B+ em mensalidades. Reduziu dependência do FIES em 60%.',src:'Cogna RI 2023',url:'https://ri.cogna.com.br'},{co:'Anima Educação',res:'Antecipação de recebíveis melhorou capital de giro em R$180M e reduziu custo de funding.',src:'Anima RI 2022',url:'https://ri.animaeducacao.com.br'},{co:'Yduqs / Estácio',res:'Financiamento próprio captura spread de 4-6% vs ceder essa margem para fintech parceira.',src:'Yduqs RI 2023',url:'https://ri.yduqs.com.br'}],agro:[{co:'Lavoro (NYSE: LVRO)',res:'Crédito rural próprio responde por +25% da receita. Maior distribuidora de agroquímicos da América Latina.',src:'Lavoro RI 2023',url:'https://ir.lavoro.com.br'},{co:'Coop (Cooperativa SP)',res:'Braço financeiro processa R$2B+/ano com spread médio 3,5% — receita antes destinada a bancos.',src:'Relatório Anual Coop 2022',url:'https://www.coop.com.br/institucional'},{co:'BrasilAgro',res:'Antecipação de recebíveis de safra gerou R$120M em capital de giro com custo 40% menor que linha bancária.',src:'BrasilAgro RI 2023',url:'https://ri.brasil-agro.com.br'}],servicos:[{co:'Totvs Financial Services',res:'Vertical financeira cresce 60% a.a. e representa 12% da receita total da Totvs.',src:'Totvs RI 2023',url:'https://ri.totvs.com'},{co:'iFood',res:'Conta digital + crédito para restaurantes: 100K+ estabelecimentos, R$50B+ processados/ano.',src:'iFood Blog Corporativo 2023',url:'https://blog.ifood.com.br/noticias'},{co:'Localiza&Co',res:'Estrutura financeira para frotistas captura spread antes repassado a financeiras. ROE supera varejo de veículos.',src:'Localiza RI 2023',url:'https://ri.localiza.com'}]};
+
+const INT_LBL=['','Exploratório','Interesse médio','Alto interesse'];
+const INT_CLS=['','li-1','li-2','li-3'];
+const INT_DSC=['','Ainda mapeando','Boa probabilidade de avançar','Pronto para conversar'];
+
+function fmt(v){if(v>=1e9)return`R$${(v/1e9).toFixed(1).replace('.',',')}B`;if(v>=1e6)return`R$${Math.round(v/1e6)}M`;if(v>=1e3)return`R$${Math.round(v/1e3)}K`;return`R$${Math.round(v)}`}
+
+function setProg(n){for(let i=1;i<=7;i++){const e=document.getElementById('d'+i);if(e)e.className='pd'+(i<n?' done':i===n?' on':'')}document.getElementById('pn').textContent=n<=7?`0${n}/07`:'✓'}
+
+function go(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo({top:0,behavior:'smooth'});const m={s1:1,s2:2,s3:3,s4:4,s5:5,s6:6,s7:7};if(m[id])setProg(m[id])}
+
+function ck1(){S.nome=document.getElementById('f1').value.trim();S.cargo=document.getElementById('f2').value.trim();S.empresa=document.getElementById('f3').value.trim();S.email=document.getElementById('f4').value.trim();document.getElementById('b1').disabled=!(S.nome&&S.cargo&&S.empresa&&S.email)}
+
+function pick(el,f,v,n){el.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));el.classList.add('on');S[f]=v;if(f==='fat'){S.fat=typeof n==='number'?n:0;S.fat_lbl=v}if(f==='fat'||f==='setor')document.getElementById('b2').disabled=!(S.setor&&S.fat);const bm={dor:'b4',mat:'b5',obj:'b6'};if(bm[f])document.getElementById(bm[f]).disabled=false}
+
+function multi(el,f,v){el.classList.toggle('on');if(!S[f])S[f]=[];const i=S[f].indexOf(v);if(i===-1)S[f].push(v);else S[f].splice(i,1);document.getElementById('b3').disabled=S[f].length===0}
+
+function setStar(n){S.stars=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n));document.getElementById('star-lbl').textContent=SLBL[n];document.getElementById('b7').disabled=false}
+
+function calcInteresse(){let p=0;if(S.obj==='credito'||S.obj==='plataforma')p+=3;else if(S.obj==='pagamentos'||S.obj==='reduzir')p+=2;else p+=1;if(S.fat_lbl==='150-500')p+=3;else if(S.fat_lbl==='50-150')p+=2;else p+=1;if(S.mat==='avancado')p+=2;else if(S.mat==='medio')p+=1;if(S.dor==='receita'||S.dor==='custo')p+=2;else p+=1;return p>=9?3:p>=6?2:1}
+
+function calcPot(){const base=S.fat*0.018;const md={custo:1.35,inadimplencia:1.15,caixa:1.20,retencao:1.25,receita:1.30};const mo={reduzir:1.05,credito:1.40,pagamentos:1.15,plataforma:1.55,explorar:1.0};const ms={varejo:1.2,construcao:1.15,saude:1.1,educacao:1.25,agro:1.3,servicos:1.1};const mm={basico:.85,medio:1.0,avancado:1.2};return Math.round(base*(md[S.dor]||1)*(mo[S.obj]||1)*(ms[S.setor]||1)*(mm[S.mat]||1))}
+
+async function gerar(){
+  const pot=calcPot();const int=calcInteresse();
+  document.getElementById('rid').textContent=S.nome+' · '+S.empresa+' · '+( SL[S.setor]||S.setor);
+  const ops=OPS[S.setor]||OPS['servicos'];
+  document.getElementById('rops').innerHTML=ops.map((o,i)=>`<div class="orow"><div class="on_ p${i+1}">0${i+1}</div><div><div class="oname p${i+1}">${o.n}</div><div class="owhy">${o.w}</div><div class="opil">${o.p}</div></div></div>`).join('');
+  const cs=CASES[S.setor]||CASES['servicos'];
+  document.getElementById('rcases').innerHTML=cs.map(c=>`<div class="crow"><div class="crow-co">${c.co}</div><div class="crow-res">${c.res}</div><div class="crow-src">Fonte: <a href="${c.url}" target="_blank" rel="noopener">${c.src}</a></div></div>`).join('');
+  salvar(pot,int);setProg(8);go('sres');chamarIA(pot,int);
+}
+
+async function chamarIA(pot,int){
+  const pr=`Você é especialista em embedded finance da Finscale. Escreva um diagnóstico estratégico para o CEO desta empresa. Tom direto, provocador, sem entregar o plano — o objetivo é fazer a pessoa perceber a oportunidade e querer conversar.
+
+Perfil: ${S.empresa} (${S.cargo}) | Setor: ${SL[S.setor]||S.setor} | Faturamento: ${S.fat_lbl}/ano | Maturidade digital: ${ML[S.mat]||S.mat} | Pagamentos atuais: ${S.fluxo.join(', ')||'não informado'} | Principal dor: ${DL[S.dor]||S.dor} | Objetivo: ${OL[S.obj]||S.obj}
+
+Escreva em 2 blocos separados por ---
+
+BLOCO 1 — DIAGNÓSTICO (2 parágrafos curtos)
+Com base nas respostas, mostre o que está acontecendo no negócio hoje em termos financeiros. O que está sendo perdido, qual a oportunidade que existe no setor e porte desse negócio. Seja específico ao setor. Não cite números de receita — só o cenário e o que está sendo deixado para terceiros.
+
+BLOCO 2 — O QUE ESTÁ EM JOGO (1 parágrafo)
+Sem entregar o como. Mostre qual transformação é possível se essa empresa estruturar um braço financeiro — o que muda em termos de posição competitiva, relacionamento com cliente e novas linhas de receita. Crie urgência sem ser agressivo. Termine com uma pergunta que convide à conversa.
+
+Máximo 200 palavras. Sem bullet points. Tom de consultora experiente falando com o dono do negócio.`;
+  renderAnalise(fallback());
+}
+
+function renderAnalise(txt){
+  document.getElementById('ald').style.display='none';
+  const box=document.getElementById('abox');box.style.display='block';
+  const bl=txt.split(/\n---\n|---\n|\n---/).map(b=>b.trim()).filter(b=>b);
+  if(bl.length>=2){
+    box.innerHTML='<div class="abox">'+bl.slice(0,2).map((b,i)=>`<div class="ablk" style="${i===1?'background:var(--s2);padding:14px 16px;border-radius:3px;border:1px solid var(--b2)':''}"><div class="ablk-txt">${b}</div></div>`).join('')+'</div>';
+  }else{
+    box.innerHTML=`<div class="abox"><div class="ablk"><div class="ablk-txt">${txt}</div></div></div>`;
+  }
+}
+
+function fallback(){
+  const s=S.setor||'servicos';
+  const diag={
+    varejo:`No varejo, uma parcela relevante da receita que passa pela sua operação hoje vai direto para o bolso de terceiros — adquirentes, financeiras parceiras, bancos de crédito. Cada venda parcelada, cada transação no cartão, cada cliente que precisou de crédito para comprar: alguém capturou esse valor no lugar da sua empresa. Você entregou o relacionamento financeiro com o seu próprio cliente para um concorrente invisível.`,
+    construcao:`Na construção, o dinheiro de terceiros que transita pela sua operação antes de ser utilizado fica parado, sem trabalhar. Cada comprador financiado por banco, cada fornecedor pago por conta bancária cara, cada obra gerenciada sem estrutura financeira própria representa uma oportunidade que outra empresa do setor já está capturando. O fluxo financeiro da sua operação é um ativo — que hoje está sendo explorado por outros.`,
+    saude:`Na saúde, os recebíveis a prazo representam capital imobilizado e caro. Financeiras parceiras capturam spread sobre o faturamento dos seus clientes, enquanto você financia o capital de giro com linhas bancárias caras. Distribuidoras e operadoras do seu setor que estruturaram um braço financeiro próprio passaram a controlar o relacionamento, os dados e a margem que antes iam embora.`,
+    educacao:`Em educação, o crédito estudantil que vai para parceiros externos entrega junto a margem, o relacionamento e os dados do aluno. A inadimplência alta que muitas IES enfrentam não é destino — é consequência de depender de modelos de risco genéricos que não conhecem o perfil específico de quem estuda na sua instituição. Quem controla o crédito controla a permanência.`,
+    agro:`No agronegócio, quem financia o insumo define o relacionamento com o produtor. O crédito que vai para bancos e distribuidoras financeiras leva junto a fidelização, os dados de safra e a margem de spread que poderia compor a sua receita. Cada safra que passa sem estrutura financeira própria é mais um ciclo de relacionamento entregue para terceiros.`,
+    servicos:`Empresas de serviço com faturamento recorrente têm um dos melhores ativos para embedded finance: previsibilidade. Esse ativo hoje financia empréstimos bancários caros, quando poderia ser transformado em capital remunerado, crédito para clientes e novas linhas de receita. O mercado financeiro já percebeu o valor dos seus dados — a pergunta é quem vai capturar esse valor primeiro.`
+  };
+  const jogo={
+    varejo:`Estruturar um braço financeiro no varejo transforma a relação com o cliente: de transacional para recorrente. Crédito próprio, carteira digital, gestão de pagamentos — cada um desses produtos cria vínculo, gera dados e produz receita que hoje não existe no seu P&L. A Riachuelo, o Mercado Livre, as Casas Bahia fizeram essa escolha — e o braço financeiro virou o ativo mais valioso. O que falta para o seu negócio dar esse passo?`,
+    construcao:`Construtoras e incorporadoras que estruturaram operações financeiras próprias passaram a controlar o ciclo de venda inteiro — da planta ao financiamento do comprador. Isso reduz distratos, aumenta conversão e cria uma linha de receita financeira que escala com o volume de obras. O seu negócio já tem o volume e o relacionamento. O que falta é a estrutura. Quer entender como isso se aplica à sua operação?`,
+    saude:`Distribuidoras e operadoras de saúde que criaram braços financeiros próprios reduziram custo de capital, aumentaram fidelização e criaram receita financeira sobre o mesmo volume de negócios que já tinham. O fluxo financeiro que passa pela sua operação já justifica a análise. O próximo passo começa com uma conversa.`,
+    educacao:`IES que controlam o crédito do aluno controlam a permanência, a inadimplência e a margem. Mais do que uma nova receita, é uma transformação na lógica do negócio — de escola para plataforma financeira de educação. Esse caminho já foi trilhado por grupos como Cogna e Anima. O que muda quando você aplica isso ao seu contexto específico?`,
+    agro:`Distribuidoras e cooperativas que estruturaram crédito próprio para o produtor criaram um vínculo que vai além da safra. O produtor que financia pelo seu canal tende a comprar mais, renovar mais e recomendar mais. Isso é vantagem competitiva que nenhum desconto compra. Quer entender como estruturar isso no seu modelo?`,
+    servicos:`Empresas de serviço que cruzaram para o embedded finance descobriram que os dados que já tinham eram o melhor ativo de crédito do mercado. Totvs, iFood, Localiza — todas usaram o que já sabiam sobre seus clientes para criar produtos financeiros que nenhum banco conseguia calibrar. O que você sabe sobre os seus clientes que um banco não sabe?`
+  };
+  return`${diag[s]||diag.servicos}\n---\n${jogo[s]||jogo.servicos}`;
+}
+
+const SHEETDB_URL='https://sheetdb.io/api/v1/p1kks4ylnwdmk';
+const KEY='fs_v4';
+function lsGet(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):[]}catch(e){return[]}}
+function lsSet(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+function salvar(pot,int){
+  const rec={
+    nome:S.nome, cargo:S.cargo, empresa:S.empresa, email:S.email,
+    setor:SL[S.setor]||S.setor, faturamento:S.fat_lbl,
+    fluxo:S.fluxo.join('+'), dor:DL[S.dor]||S.dor,
+    maturidade:ML[S.mat]||S.mat, objetivo:OL[S.obj]||S.obj,
+    nps:String(S.stars), interesse:INT_LBL[int],
+    potencial:String(pot), timestamp:new Date().toLocaleString('pt-BR'),
+    _subject: 'Novo lead Finscale: '+S.nome+' - '+S.empresa
+  };
+  // Backup local sempre
+  try{const a=lsGet();a.push(rec);lsSet(a);}catch(e){}
+
+  // Envia ao Formspree — sem reCAPTCHA, sem bloqueio mobile
+  const enviar = () => fetch('https://formspree.io/f/xkopoaya',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(rec)
+  }).then(r=>r.json()).then(d=>{
+    if(d.ok) console.log('Formspree: enviado ✓');
+    else console.warn('Formspree erro:',d);
+  }).catch(e=>{
+    // Retry uma vez após 2s se falhar
+    setTimeout(()=>fetch('https://formspree.io/f/xkopoaya',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(rec)
+    }).catch(()=>{}),2000);
+  });
+
+  enviar();
+}
+
+const PWD='finscale2026';
+let clicks=0,ct=null;
+function trigAdm(){clicks++;clearTimeout(ct);ct=setTimeout(()=>clicks=0,600);if(clicks>=3){clicks=0;document.getElementById('pw-modal').classList.add('on');setTimeout(()=>document.getElementById('pwi').focus(),100)}}
+function ckPw(){if(document.getElementById('pwi').value===PWD){document.getElementById('pw-modal').classList.remove('on');document.getElementById('pwi').value='';document.getElementById('pwe').style.display='none';openAdm()}else{document.getElementById('pwe').style.display='block';document.getElementById('pwi').value='';document.getElementById('pwi').focus()}}
+function openAdm(){document.getElementById('adm').classList.add('on');loadAdm();clearInterval(window._at);window._at=setInterval(()=>{if(document.getElementById('adm').classList.contains('on'))loadAdm()},15000)}
+function closeAdm(){document.getElementById('adm').classList.remove('on');clearInterval(window._at)}
+
+async function loadAdm(){
+  // Tenta buscar do Google Sheets primeiro
+  let l=lsGet();
+  try{
+    const r=await fetch(SCRIPT_URL);
+    if(r.ok){
+      const d=await r.json();
+      if(d.respostas&&d.respostas.length){
+        l=d.respostas.map(row=>({
+          nome:row['Nome']||'',cargo:row['Cargo']||'',empresa:row['Empresa']||'',
+          email:row['E-mail']||'',setor:row['Setor']||'',fat:row['Faturamento']||'',
+          fluxo:row['Fluxo de pagamentos']||'',dor:row['Dor principal']||'',
+          mat:row['Maturidade digital']||'',obj:row['Objetivo']||'',
+          nps:row['NPS (estrelas)']||0,interesse:row['Nível de interesse']||'',
+          potencial:parseInt(row['Potencial/ano (R$)'])||0,
+          timestamp:row['Timestamp']||''
+        }));
+      }
+    }
+  }catch(e){console.warn('sheets fetch:',e);}
+  document.getElementById('at').textContent=l.length;
+  document.getElementById('aem').style.display=l.length?'none':'block';
+  if(!l.length)return;
+  document.getElementById('ap').textContent=fmt(l.reduce((s,r)=>s+r.potencial,0)/l.length);
+  const ns=l.map(r=>r.nps||0).filter(n=>n>0);
+  document.getElementById('anps').textContent=ns.length?(ns.reduce((a,b)=>a+b,0)/ns.length).toFixed(1)+'★':'—';
+  document.getElementById('aint').textContent=l.filter(r=>r.interesse==='Alto interesse').length;
+  document.getElementById('leads-grid').innerHTML=l.map((r,i)=>{
+    const ic=r.interesse==='Alto interesse'?'li-3':r.interesse==='Interesse médio'?'li-2':'li-1';
+    return`<div class="lead-card"><div><div class="lead-name">${r.nome}</div><div class="lead-co">${r.cargo} · ${r.empresa}</div><div class="lead-email">${r.email}</div><div class="lead-tags"><span class="ltag hl">${r.setor}</span><span class="ltag">${r.fat}</span><span class="ltag">${r.dor}</span><span class="ltag">${r.obj}</span></div><div class="lead-tags" style="margin-top:4px"><span class="lead-int ${ic}">${r.interesse}</span></div></div><div><div class="lead-pot">${fmt(r.potencial)}</div><div class="lead-nps">${r.nps?r.nps+'★':'—'}</div></div></div>`;
+  }).join('');
+  document.getElementById('atb').innerHTML=l.map((r,i)=>{
+    const c=r.interesse==='Alto interesse'?'#00C864':r.interesse==='Interesse médio'?'#C8A000':'#606060';
+    return`<tr><td>${i+1}</td><td><strong style="color:#fff">${r.nome}</strong></td><td>${r.cargo}</td><td>${r.empresa}</td><td>${r.email}</td><td>${r.setor}</td><td>${r.fat}</td><td>${r.dor}</td><td>${r.obj}</td><td>${r.mat}</td><td>${r.nps?r.nps+'★':'—'}</td><td><span style="color:${c};font-weight:700;font-size:10px">${r.interesse}</span></td><td style="color:#fff;font-weight:700">${fmt(r.potencial)}</td><td style="color:#606060;font-size:10px">${r.timestamp}</td></tr>`;
+  }).join('');
+}
+
+function expCSV(){
+  const l=lsGet();if(!l.length){alert('Nenhuma resposta ainda.');return}
+  const h=['#','Nome','Cargo','Empresa','E-mail','Setor','Faturamento','Fluxo','Dor','Maturidade','Objetivo','NPS','Interesse','Potencial(R$)','Horário'];
+  const rows=l.map((r,i)=>[i+1,r.nome,r.cargo,r.empresa,r.email,r.setor,r.fat,r.fluxo,r.dor,r.mat,r.obj,r.nps||'',r.interesse,r.potencial,r.timestamp].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\\uFEFF'+[h.join(','),...rows].join('\\n')],{type:'text/csv;charset=utf-8;'}));a.download=`finscale-leads-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+}
+
+function reiniciar(){Object.assign(S,{nome:'',cargo:'',empresa:'',email:'',setor:'',fat:0,fat_lbl:'',fluxo:[],dor:'',mat:'',obj:'',stars:0});document.querySelectorAll('.opt,.star').forEach(o=>o.classList.remove('on'));['f1','f2','f3','f4'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});['b1','b2','b3','b4','b5','b6','b7'].forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=true});document.getElementById('star-lbl').textContent='';document.getElementById('ald').style.display='flex';document.getElementById('abox').style.display='none';setProg(0);document.getElementById('pn').textContent='—';go('s0')}
+
+window.addEventListener('DOMContentLoaded',()=>{if(location.hash==='#admin'){document.getElementById('pw-modal').classList.add('on');setTimeout(()=>document.getElementById('pwi').focus(),100)}});
+</script>
+</body>
+</html>
